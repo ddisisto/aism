@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - aism-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  test-agent:
+    image: alpine:latest
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - aism-network
+    command: sh -c "apk add --no-cache redis && redis-cli -h redis ping && echo 'Redis connection successful!'"
+
+networks:
+  aism-network:
+    driver: bridge

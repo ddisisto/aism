@@ -120,7 +120,7 @@ Agent Tool Call → Bridge → Validator → Executor → Response
 - Request/response channels
 
 **Filesystem for persistence:**
-- `/agents/@{id}/` - agent workspaces
+- `/agents/{name}/` - agent workspaces
 - `/protocols/` - FSM definitions
 - `/engine/_measurements/` - metrics and history
 - Git tracks all changes for auditability
