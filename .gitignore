@@ -1,0 +1,25 @@
+# Session logs
+*.log
+sessions/
+
+# Engine measurements
+engine/_measurements/
+engine/_history/
+
+# Docker
+.docker/
+
+# Node modules (if needed later)
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

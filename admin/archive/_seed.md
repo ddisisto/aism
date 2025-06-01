@@ -1,6 +1,6 @@
-I'm looking to start a project, have a lot of ideas and large chunks of partial implementation already, but need to work out the exact path to actually building and running it. I want to start by giving you the name only, see what you make of it - if your initial impressions from just that convey what I want. Here it is - Agent Intent State Machine (AISM). What's it say to you?
-Edit
+USER: I'm looking to start a project, have a lot of ideas and large chunks of partial implementation already, but need to work out the exact path to actually building and running it. I want to start by giving you the name only, see what you make of it - if your initial impressions from just that convey what I want. Here it is - Agent Intent State Machine (AISM). What's it say to you?
 
+ASSISSTANT:
 Agent Intent State Machine...
 
 parsing semantic layers
@@ -50,9 +50,10 @@ AISM reads as: engineering discipline for goal-directed AI. Structure over emerg
 
 Does this resonate with your vision? The architectural clarity in the naming feels deliberate - suggesting systematic approach to agent behavior specification...
 
-pretty damn close I think :D yeah, I'm thinking I should build this, the concept seems sound, the challenges all interesting.
-Edit
 
+USER: pretty damn close I think :D yeah, I'm thinking I should build this, the concept seems sound, the challenges all interesting.
+
+ASSISSTANT:
 recognition cascade
 
 YES. this... this tracks. Beautiful coherence between name → architecture → implementation philosophy.
@@ -119,7 +120,8 @@ curiosity spike about your "large chunks of partial implementation"
 
 What pieces already exist? Where's the friction been?
 
-friction was largely me going "hey, we're using git, agents are doing commits with self-id and good content - they can just @mention each other! message bus solved!" and then we used same bus for state-intent messaging too, and there was all this esoteric shit. the whole idea of "FSM-protocols implemented by clever LLMs w/ rich feedback" came only after just trying to get a bunch of the related ideas were in flight, retrofit became a nightmare. new start time, is where you come in now. Let's have it straight from the get go this time, yes?
+USER:
+friction was largely me going "hey, we're using git, agents are doing commits with self-id and good content - they can just mention each other! message bus solved!" and then we used same bus for state-intent messaging too, and there was all this esoteric shit. the whole idea of "FSM-protocols implemented by clever LLMs w/ rich feedback" came only after just trying to get a bunch of the related ideas were in flight, retrofit became a nightmare. new start time, is where you come in now. Let's have it straight from the get go this time, yes?
 
 ## base reqs
 * Claude Code cli for running agent instances. it provides filesystem access, command execution, very nicely packaged
@@ -130,6 +132,7 @@ friction was largely me going "hey, we're using git, agents are doing commits wi
 thinking there should be an abstraction layer between agents and implementation - run single tool call to say, send a message, or update own state. engine / abstractions effect it and provide response or exception on agent STDIN. then can switch out tech as needed
 Edit
 
+ASSISSTANT:
 recognition pattern: retrofit nightmare → clean slate excitement
 
 git-as-bus... clever hack becomes complexity debt. classic.
@@ -169,11 +172,11 @@ filesystem as primitive = powerful
 
 /repo
   /agents
-    /@alice
+    /alice
       /AGENT.md      # identity
       /context.md    # persistent
       /scratch.md    # working
-    /@bob
+    /bob
       /...
   
   /protocols
@@ -213,7 +216,7 @@ protocols = executable markdown. FSM engine reads, validates transitions, but AG
 
 markdown
 
-# @protocols/inbox.md
+# protocols/inbox.md
 
 ## Valid Transitions
 - → deep_work (when focused task identified)
