@@ -1,41 +1,99 @@
-# Current Context
+# Architect Context
 
-## Session Insights
+## Current State (Session #2, 2025-01-06)
 
-### Core Architecture Decisions (Locked In)
-- **Tool Interface**: CLI via Redis message bus
-- **State Management**: Redis for live ops, filesystem for persistence
-- **Container Pattern**: Engine prompts, agent acts autonomously
-- **Protocol/Flow Split**: Protocols = single state behaviors, Flows = multi-state patterns
+### Where We Are
+- Docker/Podman container lifecycle tested and understood
+- Redis-based agent communication pattern designed (single request queue, per-agent replies)
+- Tool interface (`./aism`) defined as stateless CLI
+- Ready to implement minimal tool and engine loop
 
-### Recurring Themes
-1. **Simplicity First**: Every design choice should reduce complexity
-2. **Agent Autonomy**: Agents decide how to achieve goals within state constraints
-3. **Living Patterns**: Protocols evolve through use, not committee design
-4. **Measurement Philosophy**: Observe everything, interfere with nothing
-5. **Emergent Specialization**: Let agents discover their strengths
+### Next Priorities
+1. Implement minimal `aism` tool (Go/Python - parse, send to Redis, wait for reply)
+2. Create basic engine loop (poll requests, validate, respond)
+3. Design FSM format for state validation
+4. Test tool↔engine↔agent communication flow
 
-### Key Tensions Resolved
-- Control vs Autonomy → Engine validates, agents execute
-- Speed vs Durability → Redis for ops, filesystem for audit
-- Prescription vs Discovery → Base protocols minimal, variants emergent
-- Individual vs Collective → Personal adaptations can become shared patterns
+### Active Tensions
+- Message format simplicity vs future extensibility
+- Engine complexity vs tool intelligence (resolved: thin client)
+- Synchronous tool calls vs async agent operations
 
-### Current State
-- Core architecture designed and documented
-- Protocols/flows conceptually separated  
-- Evolution mechanisms outlined
-- Ready to implement bootstrap and base protocols
+## Core Patterns
 
-### Next Critical Steps
-1. Test agent container boot process (manual Docker run)
-2. Test stdin/stdout IO between architect and containerized agent
-3. Design state serialization format for agent live view
-4. Implement minimal aism tool (Redis communication)
-5. Create base work protocols (inbox, deep_work, distill)
-6. Build engine with Redis integration
+### System Architecture
+- **Communication**: Redis message bus, not stdin/stdout
+- **Persistence**: Redis (live state) + Filesystem (durability) hybrid
+- **Containers**: Podman/Docker with host networking for now
+- **Tool Design**: Stateless CLI, blocks for replies
 
-### Session Learnings
-- No time estimates in protocols (use token estimates when learned)
-- No @ symbols in paths or agent names (save for inter-agent messaging)
-- Embrace agent nature rather than imposing external patterns
+### Design Principles
+1. **Simplicity First**: Every choice reduces complexity
+2. **Agent Autonomy**: Agents pull work when ready
+3. **Living Patterns**: Protocols evolve through use
+4. **Measurement Without Interference**: Observe via Redis events
+
+References:
+- Tool interface: `/experiments/redis/interface-first-design.md`
+- Docker patterns: `/experiments/docker/distilled-insights.md`
+
+## Architecture Decisions
+
+### Redis Communication Pattern (Session #2)
+**Decision**: Single `aism:requests` queue with per-agent reply channels
+**Rationale**: 
+- Single serialization point for engine
+- Natural request/reply pattern for CLI tool  
+- Agents can't crosstalk on replies
+**Supersedes**: Direct stdin/stdout between engine and agents (Session #1)
+
+### Tool Behavior (Session #2)
+**Decision**: Stateless, synchronous CLI tool
+**Rationale**:
+- Maps perfectly to Bash() execution model
+- No daemon complexity per agent
+- Clear exit codes for success/failure
+
+### Container Strategy (Session #2)
+**Decision**: Host networking with Podman compatibility
+**Rationale**:
+- Simpler Redis access during development
+- Podman already available on system
+- Can migrate to isolated networks later
+
+### Agent Workspace Structure (Session #1)
+**Decision**: `/agents/{agent_id}/` for persistence
+**Rationale**:
+- Clean volume mounting
+- Git-trackable changes
+- No special characters in paths
+
+## Meta: Maintaining This File
+
+### What Belongs Here
+- Current state and immediate priorities (constantly updated)
+- Architectural decisions with rationale and session tracking
+- Core patterns that guide implementation
+- Pointers to detailed documentation
+
+### What Doesn't
+- Implementation code (link to files)
+- Historical narratives (use git history)
+- Detailed procedures (use separate docs)
+- Speculative designs (use experiments/)
+
+### Update Protocol
+1. **Session Start**: Read full file, check current state
+2. **During Work**: Note decisions as they're made
+3. **Session End**: Update current state, add decisions, remove superseded content
+4. **Maintenance**: Keep under 150 lines, link for details
+
+### Decision Entry Format
+```
+### [Decision Name] (Session #X)
+**Decision**: One-line summary
+**Rationale**: Why this choice
+**Supersedes**: Previous approach if applicable
+```
+
+Remove superseded sections once implementation is updated.
